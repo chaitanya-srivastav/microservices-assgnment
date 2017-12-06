@@ -69,9 +69,9 @@ def nextFlight():
                     type: string
                     default: 111
     """
-    microuser = os.environ["MICROUSERNAME"]
-    micropass = os.environ["MICROPASSWORD"]
-    r = requests.get('https://us-central1-airasiawebanalytics.cloudfunctions.net/interviewAPIdata/nextflight', auth=(microuser, micropass))
+    # microuser = os.environ["MICROUSERNAME"]
+    # micropass = os.environ["MICROPASSWORD"]
+    r = requests.get('https://us-central1-airasiawebanalytics.cloudfunctions.net/interviewAPIdata/nextflight', auth=('airasia', 'AllStars9'))
     all_flights_info = r.json()
     dsc = request.args.get('DepartureStationCode')
     filter_based_on_input = [{"2": flight_info["NEXT_ARRIVALSTATION"] + dsc, "source_id": flight_info["customerID"]} for flight_info in all_flights_info if flight_info["NEXT_DEPARTURESTATION"] == dsc]
