@@ -17,11 +17,11 @@ from flask import make_response
 from flasgger import Swagger
 import requests
 import os
-from flask_httpauth import HTTPBasicAuth
+# from flask_httpauth import HTTPBasicAuth
 
 app = Flask(__name__)
 Swagger(app)
-auth = HTTPBasicAuth()
+# auth = HTTPBasicAuth()
 
 users = {
     "micro": "service",
@@ -32,7 +32,7 @@ def index():
     return redirect("/apidocs/", code=302)
 
 @app.route('/api/nextflight')
-@auth.login_required
+# @auth.login_required
 def nextFlight():
     """
     Customers flying for the next 7 days API
@@ -78,16 +78,16 @@ def nextFlight():
     resp = {"key_id": dsc, "contacts": filter_based_on_input}
     return jsonify(resp)
 
-@auth.verify_password
-def verify_password(username, password):
-    if username in users:
-        passwd = users.get(username)
-        if password == passwd:
-            return True
-        else:
-            return False
-    if not username:
-        return False
+# @auth.verify_password
+# def verify_password(username, password):
+#     if username in users:
+#         passwd = users.get(username)
+#         if password == passwd:
+#             return True
+#         else:
+#             return False
+#     if not username:
+#         return False
 
 
 if __name__ == "__main__":
