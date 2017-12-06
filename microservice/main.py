@@ -72,15 +72,15 @@ def nextFlight():
     """
     microuser = os.environ["MICROUSERNAME"]
     micropass = os.environ["MICROPASSWORD"]
-    request = urllib2.Request("https://us-central1-airasiawebanalytics.cloudfunctions.net/interviewAPIdata/nextflight")
+    req = urllib2.Request("https://us-central1-airasiawebanalytics.cloudfunctions.net/interviewAPIdata/nextflight")
     base64string = base64.b64encode('%s:%s' % (microuser, micropass))
-    request.add_header("Authorization", "Basic %s" % base64string)
-    result = urllib2.urlopen(request)
-    # all_flights_info = result
+    req.add_header("Authorization", "Basic %s" % base64string)
+    result = urllib2.urlopen(req)
+    all_flights_info = result.read()
     dsc = request.args.get('DepartureStationCode')
     # filter_based_on_input = [{"2": flight_info["NEXT_ARRIVALSTATION"] + dsc, "source_id": flight_info["customerID"]} for flight_info in all_flights_info if flight_info["NEXT_DEPARTURESTATION"] == dsc]
     # resp = {"key_id": dsc, "contacts": filter_based_on_input}
-    return jsonify(result)
+    return jsonify(all_flights_info)
 
 @auth.verify_password
 def verify_password(username, password):
