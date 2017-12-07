@@ -17,14 +17,11 @@ from flask import make_response
 from flasgger import Swagger
 import os
 from flask_httpauth import HTTPBasicAuth
-import urllib2
-import base64
-from google.appengine.api import urlfetch
-# import requests
-# import requests_toolbelt.adapters.appengine
+import requests
+import requests_toolbelt.adapters.appengine
 # Use the App Engine Requests adapter. This makes sure that Requests uses
 # URLFetch.
-# requests_toolbelt.adapters.appengine.monkeypatch()
+requests_toolbelt.adapters.appengine.monkeypatch()
 
 app = Flask(__name__)
 Swagger(app)
@@ -79,19 +76,14 @@ def nextFlight():
     microuser = os.environ["MICROUSERNAME"]
     micropass = os.environ["MICROPASSWORD"]
     url = 'https://us-central1-airasiawebanalytics.cloudfunctions.net/interviewAPIdata/nextflight'
-    encoded = base64.b64encode(microuser+":"+micropass)
-    headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + encoded,
-    }
-    req = urlfetch.fetch(url=url, headers=headers)
-    r = req.content
-    # r = requests.get(url, auth=(microuser, micropass))
-    # all_flights_info = r.json()
+    headers = {'Content-Type': 'application/json',
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36'}
+    r = requests.get(url, auth=(microuser, micropass), headers=headers)
+    all_flights_info = r.json()
     dsc = request.args.get('DepartureStationCode')
     # filter_based_on_input = [{"2": flight_info["NEXT_ARRIVALSTATION"] + dsc, "source_id": flight_info["customerID"]} for flight_info in all_flights_info if flight_info["NEXT_DEPARTURESTATION"] == dsc]
     # resp = {"key_id": dsc, "contacts": filter_based_on_input}
-    return jsonify(r)
+    return jsonify(all_flights_info)
 
 @auth.verify_password
 def verify_password(username, password):
