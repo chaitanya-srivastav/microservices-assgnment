@@ -15,13 +15,13 @@
 from flask import Flask, render_template, request, jsonify, abort, redirect
 from flask import make_response
 from flasgger import Swagger
-import os
+import os, logging
 from flask_httpauth import HTTPBasicAuth
 import requests
-# import requests_toolbelt.adapters.appengine
+import requests_toolbelt.adapters.appengine
 # Use the App Engine Requests adapter. This makes sure that Requests uses
 # URLFetch.
-# requests_toolbelt.adapters.appengine.monkeypatch()
+requests_toolbelt.adapters.appengine.monkeypatch()
 
 app = Flask(__name__)
 Swagger(app)
@@ -79,6 +79,7 @@ def nextFlight():
     headers = {'Content-Type': 'application/json',
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36'}
     r = requests.get(url, auth=(microuser, micropass), headers=headers)
+    logging.debug(r)
     all_flights_info = r.json()
     dsc = request.args.get('DepartureStationCode')
     filter_based_on_input = [{"2": flight_info["NEXT_ARRIVALSTATION"] + dsc, "source_id": flight_info["customerID"]} for flight_info in all_flights_info if flight_info["NEXT_DEPARTURESTATION"] == dsc]
