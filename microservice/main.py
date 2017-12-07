@@ -76,6 +76,7 @@ def nextFlight():
     microuser = os.environ["MICROUSERNAME"]
     micropass = os.environ["MICROPASSWORD"]
     url = 'https://us-central1-airasiawebanalytics.cloudfunctions.net/interviewAPIdata/nextflight'
+    logging.debug('Trying to hit: ' + url)
     headers = {'Content-Type': 'application/json',
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36'}
     r = requests.get(url, auth=(microuser, micropass), headers=headers)
