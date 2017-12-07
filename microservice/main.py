@@ -15,13 +15,13 @@
 from flask import Flask, render_template, request, jsonify, abort, redirect
 from flask import make_response
 from flasgger import Swagger
-import requests
 import os
 from flask_httpauth import HTTPBasicAuth
+import requests
 import requests_toolbelt.adapters.appengine
 # Use the App Engine Requests adapter. This makes sure that Requests uses
 # URLFetch.
-requests_toolbelt.adapters.appengine.monkeypatch()
+requests_toolbelt.adapters.appengine.monkeypatch(validate_certificate=False)
 
 app = Flask(__name__)
 Swagger(app)
