@@ -19,6 +19,7 @@ import os
 from flask_httpauth import HTTPBasicAuth
 import urllib2
 import base64
+from google.appengine.api import urlfetch
 # import requests
 # import requests_toolbelt.adapters.appengine
 # Use the App Engine Requests adapter. This makes sure that Requests uses
@@ -79,17 +80,18 @@ def nextFlight():
     micropass = os.environ["MICROPASSWORD"]
     url = 'https://us-central1-airasiawebanalytics.cloudfunctions.net/interviewAPIdata/nextflight'
     encoded = base64.b64encode(microuser+":"+micropass)
-    req = urllib2.Request(url)
-    req.add_header("Accept", "application/json")
-    req.add_header("Authorization", "Basic " + encoded)
-    req.add_header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36")
-    r = urllib2.urlopen(req)
-    # r = requests.get(, auth=(microuser, micropass))
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Basic ' + encoded,
+    }
+    req = urlfetch.fetch(url=url, headers=headers)
+    r = req.content
+    # r = requests.get(url, auth=(microuser, micropass))
     # all_flights_info = r.json()
     dsc = request.args.get('DepartureStationCode')
     # filter_based_on_input = [{"2": flight_info["NEXT_ARRIVALSTATION"] + dsc, "source_id": flight_info["customerID"]} for flight_info in all_flights_info if flight_info["NEXT_DEPARTURESTATION"] == dsc]
     # resp = {"key_id": dsc, "contacts": filter_based_on_input}
-    return jsonify(r.read())
+    return jsonify(r)
 
 @auth.verify_password
 def verify_password(username, password):
