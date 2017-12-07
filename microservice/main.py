@@ -18,10 +18,10 @@ from flasgger import Swagger
 import os
 from flask_httpauth import HTTPBasicAuth
 import requests
-import requests_toolbelt.adapters.appengine
+# import requests_toolbelt.adapters.appengine
 # Use the App Engine Requests adapter. This makes sure that Requests uses
 # URLFetch.
-requests_toolbelt.adapters.appengine.monkeypatch()
+# requests_toolbelt.adapters.appengine.monkeypatch()
 
 app = Flask(__name__)
 Swagger(app)
@@ -81,9 +81,9 @@ def nextFlight():
     r = requests.get(url, auth=(microuser, micropass), headers=headers)
     all_flights_info = r.json()
     dsc = request.args.get('DepartureStationCode')
-    # filter_based_on_input = [{"2": flight_info["NEXT_ARRIVALSTATION"] + dsc, "source_id": flight_info["customerID"]} for flight_info in all_flights_info if flight_info["NEXT_DEPARTURESTATION"] == dsc]
-    # resp = {"key_id": dsc, "contacts": filter_based_on_input}
-    return jsonify(all_flights_info)
+    filter_based_on_input = [{"2": flight_info["NEXT_ARRIVALSTATION"] + dsc, "source_id": flight_info["customerID"]} for flight_info in all_flights_info if flight_info["NEXT_DEPARTURESTATION"] == dsc]
+    resp = {"key_id": dsc, "contacts": filter_based_on_input}
+    return jsonify(resp)
 
 @auth.verify_password
 def verify_password(username, password):
