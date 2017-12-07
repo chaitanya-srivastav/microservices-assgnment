@@ -76,7 +76,7 @@ def nextFlight():
     dsc = request.args.get('DepartureStationCode')
     filter_based_on_input = [{"2": flight_info["NEXT_ARRIVALSTATION"] + dsc, "source_id": flight_info["customerID"]} for flight_info in all_flights_info if flight_info["NEXT_DEPARTURESTATION"] == dsc]
     resp = {"key_id": dsc, "contacts": filter_based_on_input}
-    return jsonify(r)
+    return jsonify(resp)
 
 @auth.verify_password
 def verify_password(username, password):
